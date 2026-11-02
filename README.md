@@ -19,7 +19,7 @@ traffic is the one-time model download.
 npx skills add yossefismail/arabic-transcribe-skill
 ```
 
-![Arabic Transcribe workflow: eight stages from a voice note to a drafting-sheet player](assets/workflow.png)
+![Arabic Transcribe workflow: eight stages from a voice note to a drafting-sheet player](assets/workflow.png?v=2)
 
 ## What you get
 
