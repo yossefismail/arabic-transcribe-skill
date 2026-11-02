@@ -1,5 +1,7 @@
 # Arabic Transcribe
 
+**English** · [العربية](README.ar.md)
+
 An agent skill that turns an Arabic voice note, meeting recording or interview
 into a **single self-contained HTML page**: embedded audio player, speaker-coloured
 transcript that highlights as it plays, click-to-seek text, a written summary and
@@ -9,14 +11,15 @@ key-moments rail on the timeline.
 Built for 19 Arabic dialects with code-switched English, French, Spanish, or Italian. (WhatsApp voice notes,
 voice memos, calls).
 
+**Everything runs on your machine.** No cloud, no upload, no account, no token —
+the audio, the models and the finished player all stay on disk. The only network
+traffic is the one-time model download.
+
 ```sh
 npx skills add yossefismail/arabic-transcribe-skill
 ```
 
-```
-audio ─► denoise + speech EQ ─► NVIDIA Sortformer diarization ─► Jais-ASR (4-bit)
-      ─► agent writes summary ─► drafting-sheet HTML + plain-text transcript
-```
+![Arabic Transcribe workflow: eight stages from a voice note to a drafting-sheet player](assets/workflow.png)
 
 ## What you get
 
@@ -143,9 +146,10 @@ py -3.12 scripts/apply_ui.py "out/voice note" \
 `SKILL.md` is the full operating manual the agent follows: how to run the
 pipeline, what a good summary contains, and the house UI rules.
 
-Useful flags: `--quant 8bit`, `--no-enhance`, `--max-seconds N`.
+Useful flags: `--quant 8bit`, `--no-enhance`, `--max-seconds N`,
+`--language EG|auto|<dialect>`.
 
-## Security and privacy
+## Fully local
 
 - **Everything runs locally.** Audio never leaves the machine. There is no
   telemetry and no upload step anywhere in the scripts.
@@ -153,6 +157,9 @@ Useful flags: `--quant 8bit`, `--no-enhance`, `--max-seconds N`.
   Hugging Face Hub, and the NVIDIA diarizer (~8 MB `nemo-speech` runtime + 102 MB
   GGUF) from NVIDIA's GitHub release and model host. **No Hugging Face account,
   token, or gated-model signup is involved anywhere.**
+- The player is a single file with the audio embedded as base64 and the fonts
+  inlined, so it opens on a machine that has never seen this repo and has no
+  network at all.
 - The `nemo-speech` binary is downloaded and **executed**, so the version is pinned
   (v0.3.0) and checked against the release's published SHA-256 before it runs. The
   runtime is Apache-2.0; the model is OpenMDW-1.1. Delete
@@ -183,6 +190,9 @@ references/setup.md       environment + model setup, error table
 references/model.md       Jais-ASR error rates, dialect codes, code-switching
 references/ui-system.md   the visual system, tokens and layout rules
 assets/fonts/             Archivo, JetBrains Mono, Cairo (OFL, see OFL.txt)
+assets/workflow.png       workflow diagram, English
+assets/workflow-ar.png    workflow diagram, Arabic (RTL)
+README.ar.md              النسخة العربية من هذا الملف
 ```
 
 ## Licence
