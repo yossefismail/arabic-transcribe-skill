@@ -3,11 +3,11 @@
 An agent skill that turns an Arabic voice note, meeting recording or interview
 into a **single self-contained HTML page**: embedded audio player, speaker-coloured
 transcript that highlights as it plays, click-to-seek text, a written summary and
-an action-points checklist — dressed in a "technical drafting sheet" layout with a
+an action-points checklist — dressed in a "technical drafting sheet" layout with an automatically generated
 key-moments rail on the timeline.
 
-Built for Egyptian-dialect Arabic with code-switched English (WhatsApp voice notes,
-voice memos, calls), but it handles MSA and other dialects too.
+Built for 19 Arabic dialects with code-switched English, French, Spanish, or Italian. (WhatsApp voice notes,
+voice memos, calls).
 
 ```sh
 npx skills add yossefismail/arabic-transcribe-skill
