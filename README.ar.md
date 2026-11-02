@@ -66,8 +66,8 @@ npx skills add yossefismail/arabic-transcribe-skill
 سعودية، و`SD` سودانية، و`SY` سورية، و`TN` تونسية، و`YE` يمنية. ويضاف إليها التبديل
 إلى الإنجليزية والفرنسية والإسبانية والإيطالية، وتبقى المقاطع الأجنبية بالحرف اللاتيني.
 
-الخيار `--language auto` يجعل النموذج يكتشف اللهجة، و`--language EG` (الافتراضي)
-يثبّتها.
+الخيار <bdi>`--language auto`</bdi> يجعل النموذج يكتشف اللهجة، و<bdi>`--language EG`</bdi>
+(الافتراضي) يثبّتها.
 
 التفاصيل الكاملة والمنهجية والاقتباس في [references/model.md](references/model.md).
 
@@ -114,7 +114,7 @@ npx skills update
 npx skills remove arabic-transcribe
 ```
 
-المستودع يحتوي مهارة واحدة، فلا حاجة إلى العلم `--skill`.
+المستودع يحتوي مهارة واحدة، فلا حاجة إلى العلم <bdi>`--skill`</bdi>.
 
 تفضّل نسخة يدوية؟ استنسخ المستودع حيث يبحث وكيلك عن المهارات:
 
@@ -164,8 +164,8 @@ py -3.12 scripts/apply_ui.py "out/voice note" \
 `SKILL.md` هو الدليل التشغيلي الكامل الذي يتبعه الوكيل: كيف يشغّل المسار، وماذا يحتوي
 الملخص الجيد، وقواعد واجهة المهارة.
 
-أعلام مفيدة: `--quant 8bit` و`--no-enhance` و`--max-seconds N`
-و`--language EG|auto|<لهجة>`.
+أعلام مفيدة: <bdi>`--quant 8bit`</bdi> و<bdi>`--no-enhance`</bdi>
+و<bdi>`--max-seconds N`</bdi> و<bdi>`--language EG|auto`</bdi> مع رمز اللهجة.
 
 ## محلي بالكامل
 
