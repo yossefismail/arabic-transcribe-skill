@@ -1,0 +1,20 @@
+# generated transcripts and media
+* - arabic transcript.html
+* - arabic transcript.txt
+* - enhanced audio.m4a
+*.m4a
+*.mp3
+*.wav
+*.mp4
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# editors / os
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
