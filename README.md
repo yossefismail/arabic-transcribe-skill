@@ -71,14 +71,31 @@ paths in the code are guarded — but they are untested.
 
 ## Install
 
-The skill is a folder. Copy it where your agent looks for skills:
+One command, via the [skills CLI](https://github.com/vercel-labs/skills):
 
 ```sh
-# OpenCode
-cp -r arabic-transcribe ~/.config/opencode/skills/
+npx skills add yossefismail/arabic-transcribe-skill
+```
 
-# Claude Code
-cp -r arabic-transcribe ~/.claude/skills/
+It detects your agent (OpenCode, Claude Code, Cursor, …), copies the skill into
+`.agents/skills/arabic-transcribe` and records it in `skills-lock.json`. Useful
+flags:
+
+```sh
+npx skills add yossefismail/arabic-transcribe-skill -g              # user-level instead of project
+npx skills add yossefismail/arabic-transcribe-skill -a claude-code  # pick the agent explicitly
+npx skills list                                                     # what's installed
+npx skills update                                                   # pull newer commits
+```
+
+This is a single-skill repo, so no `--skill` flag is needed.
+
+Prefer a plain copy? Clone it where your agent looks for skills:
+
+```sh
+git clone https://github.com/yossefismail/arabic-transcribe-skill.git \
+  ~/.config/opencode/skills/arabic-transcribe        # OpenCode
+# or ~/.claude/skills/arabic-transcribe             # Claude Code
 ```
 
 On Windows the OpenCode path is `C:\Users\<you>\.config\opencode\skills\`.

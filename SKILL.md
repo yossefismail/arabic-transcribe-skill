@@ -1,5 +1,5 @@
 ---
-name: Arabic Transcribe
+name: arabic-transcribe
 description: Transcribe Arabic voice notes (Egyptian dialect, mixed Arabic/English) with Jais-ASR, diarize speakers with NVIDIA Nemotron-3-Diarization (no Hugging Face account or gated-model signup), and build a synced HTML player with embedded audio and speaker-colored text, ending with a summary and an action-points checklist. Use when the user asks to transcribe, summarize, or extract action items from a WhatsApp voice note, voice memo, or Arabic audio recording with speaker labels.
 ---
 
