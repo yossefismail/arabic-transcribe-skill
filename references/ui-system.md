@@ -87,8 +87,7 @@ body (dir=rtl, 40px grid)
 ├─ header.titleblock      brand + PROJECT / DATE / SPEECH / CLAUSES cells
 ├─ section.hero           eyebrow · h1 · lede | dl.facts
 ├─ section.playerbar      sticky; 01 / RECORDING + transport + rail + now-line
-├─ section.summary        sheet card; 02 / SUMMARY (when placed before main)
-│                         (or 03 / SUMMARY when add_summary appended it at the end)
+├─ section.summary        sheet card; 02 / SUMMARY, above the transcript
 ├─ section.sec-head       03 / TRANSCRIPTION + "التفريغ."
 ├─ main                   .win rows: counter gutter (W001…) + .txt
 └─ footer.colophon        counts + model + shortcuts
@@ -98,10 +97,10 @@ The chrome (`titleblock` … `playerbar`) is rebuilt from `<!-- ui:chrome:start 
 … `<!-- ui:chrome:end -->`, the style block is owned by `<style id="ui-theme">`,
 the player by `<script id="ui-player-js">`. Re-running replaces each in place.
 
-Section numbering adapts to where the summary is: if the summary sits before
-`<main>` the labels are `01 Recording / 02 Summary / 03 Transcription`; if it
-was appended at the end, `01 Recording / 02 Transcription / 03 Summary`
-(`body.summary-first` toggles the summary label).
+Section numbering is fixed: the summary sits above `<main>`, so the labels are
+always `01 Recording / 02 Summary / 03 Transcription`. `body.summary-first` is
+what flips the summary's number from its `03` fallback to `02`, and it is set by
+`apply_ui.py` whenever the summary block precedes the transcript.
 
 ## 5. Key-moments rail
 

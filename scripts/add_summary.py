@@ -1,6 +1,7 @@
-"""Append an agent-written summary of the recording to both deliverables of the
-arabic-transcribe pipeline: the synced HTML player (styled card at the end) and
-the plain-text transcript (bidi-marked section at the end).
+"""Place an agent-written summary of the recording at the top of both
+deliverables of the arabic-transcribe pipeline: the synced HTML player (styled
+card above the transcript) and the plain-text transcript (bidi-marked section
+above the transcript).
 
 The pipeline itself has no text LLM (Jais-ASR is ASR-only), so the summary is
 written by the agent after transcription, saved as a small UTF-8 file, and
@@ -118,12 +119,13 @@ def inject_html(html_path, summary_md):
         section += "\n" + CHK_JS
     section += "\n</section>"
 
-    # idempotent: drop a previous summary section, then insert fresh before <script>
+    # idempotent: drop a previous summary section, then insert fresh above <main>
+    # so the summary reads first and the transcript follows it
     html = re.sub(rf'\n*<section class="summary" id="{SUMMARY_ID}"[^>]*>.*?</section>',
                   "", html, count=1, flags=re.S)
     if ".summary {" not in html:                      # add the CSS once
         html = html.replace("</style>", SUMMARY_CSS + "\n</style>", 1)
-    html = html.replace("</main>", "</main>\n" + section, 1)
+    html = html.replace("<main>", section + "\n<main>", 1)
 
     with open(html_path, "w", encoding="utf-8") as f:
         f.write(html)
@@ -144,12 +146,17 @@ def inject_txt(txt_path, summary_md):
             line = box + " " + m.group(2)
         lines.append(bidi_line(line))
     sep = "=" * 70
-    block = "\n" + sep + "\n" + LRM + TXT_MARK + "\n" + sep + "\n\n" + "\n".join(lines) + "\n"
-    # idempotent: replace everything from the previous mark on, else append
-    pat = re.compile(r"\n={70}\n" + re.escape(LRM + TXT_MARK) + r"\n={70}\n[\s\S]*$")
-    if pat.search(txt):
-        txt = pat.sub("", txt).rstrip("\n")
-    txt = txt.rstrip("\n") + block
+    start = LRM + TXT_MARK + "\n" + sep + "\n\n"
+    block = start + "\n".join(lines) + "\n" + sep + "\n\n"
+
+    # idempotent: drop a previous block, start marker through its closing rule
+    pat = re.compile(re.escape(start) + r"[\s\S]*?\n" + re.escape(sep + "\n\n"))
+    txt = pat.sub("", txt, count=1)
+
+    # insert directly after the pipeline header rule, so the summary reads first
+    head = sep + "\n\n"
+    i = txt.find(head)
+    txt = (txt[:i + len(head)] + block + txt[i + len(head):]) if i != -1 else (block + txt)
     with open(txt_path, "w", encoding="utf-8-sig") as f:
         f.write(txt)
 
