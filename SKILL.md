@@ -26,7 +26,8 @@ only when they apply.
   - `<name> - arabic transcript.html` — the synced player (main deliverable; preview it to the user with the browser preview tool; the pipeline emits a plain version — `scripts/apply_ui.py` applies the house UI)
   - `<name> - arabic transcript.txt` — plain-text fallback with bidi marks (RLM/LRM) so Arabic+English renders correctly in Notepad
   - the pipeline does **not** write the summary — you write it after transcription (Workflow step 4) and inject it into both files with `scripts/add_summary.py`
-- Optional: `--quant 8bit` (default is 4bit NF4), `--max-seconds N` to cap processing.
+- **Model**: `IFM/Jais-ASR` (5.72 B params, Apache-2.0) — MSA, 19 Arabic dialects, and code-switching into English, French, Spanish and Italian. Published WER/CER, the dialect codes, and the `--language` pin are in `references/model.md`.
+- Optional: `--quant 8bit` (default is 4bit NF4), `--max-seconds N` to cap processing, `--language EG|auto|<dialect>` to pin the dialect (default `EG`; `auto` lets Jais detect it).
 
 ## Workflow
 

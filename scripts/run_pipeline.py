@@ -412,6 +412,15 @@ JAIS_MODEL = "IFM/Jais-ASR"
 JAIS_REVISION = os.environ.get(
     "JAIS_REVISION", "1323995fa189c479369a3929be0e95039eba5cba")
 
+# Language/dialect pin for model.generate(language=...). "auto" omits the pin and
+# lets Jais detect it (the model card's default). Coverage, error rates and the
+# code-switching behaviour are documented in references/model.md.
+JAIS_LANGUAGES = (
+    ["auto", "ar", "msa", "en", "fr", "es", "it"]
+    + ["DZ", "BH", "EG", "AE", "IQ", "JO", "KW", "LB", "LY", "MR",
+       "MA", "OM", "PS", "QA", "SA", "SD", "SY", "TN", "YE"]
+)
+
 JAIS_KNOWN_DIRS = [
     os.path.expanduser("~/.local/share/opencode/models/jais-asr"),
     os.path.expanduser("~/.cache/jais-asr"),
@@ -505,17 +514,20 @@ def jais_load(quant="4bit", source=None, local_dir=False):
     print(f"loaded in {time.time()-t0:.1f}s", flush=True)
     return model, processor
 
-def jais_transcribe(model, processor, x, sr, segs):
+def jais_transcribe(model, processor, x, sr, segs, language="EG"):
     import torch
     prompt = processor.tokenizer.apply_chat_template(
         [{"role": "user", "content": [{"type": "audio"}]}],
         tokenize=False, add_generation_prompt=True, code_switch=True)  # English stays Latin script
+    gen = dict(do_sample=False, max_new_tokens=500)
+    if language and language != "auto":
+        gen["language"] = language
     lines = []
     for s, e in segs:
         inputs = processor(text=[prompt], audio=[x[int(s * sr):int(e * sr)]],
                            sampling_rate=[sr], padding=True, return_tensors="pt").to(model.device)
         with torch.inference_mode():
-            out = model.generate(**inputs, do_sample=False, max_new_tokens=500, language="EG")
+            out = model.generate(**inputs, **gen)
         res = processor.post_process_transcription(out, input_lengths=inputs["input_ids"].shape[1])[0]
         text = "" if res.refused else re.sub(r"\s+", " ", (res.text or "")).strip()
         lines.append((s, e, text))
@@ -662,6 +674,9 @@ def main():
     ap.add_argument("--quant", choices=["4bit", "8bit"], default="4bit")
     ap.add_argument("--no-enhance", action="store_true", help="skip audio enhancement (high-pass, NR, EQ, compression)")
     ap.add_argument("--max-seconds", type=float, default=0)
+    ap.add_argument("--language", choices=JAIS_LANGUAGES, default="EG",
+                    help="pin Jais-ASR to a language/dialect (see references/model.md); "
+                         "'auto' lets the model detect it. Default: EG")
     args = ap.parse_args()
 
     if not os.path.exists(args.input):
@@ -725,7 +740,8 @@ def main():
             pass
 
         model, processor = jais_load(args.quant, jais_src, jais_local)
-        lines = jais_transcribe(model, processor, x, sr, segs)
+        print(f"Transcribing (language pin: {args.language}) ...", flush=True)
+        lines = jais_transcribe(model, processor, x, sr, segs, language=args.language)
         del model   # free VRAM/RAM before writing outputs
 
         # player audio: enhanced full-rate file trimmed to first speech -1s .. last +1s

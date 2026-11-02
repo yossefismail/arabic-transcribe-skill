@@ -22,6 +22,39 @@ audio ─► denoise + speech EQ ─► NVIDIA Sortformer diarization ─► Jai
 | `<name> - arabic transcript.txt` | Plain-text fallback with RLM/LRM bidi marks so Arabic + English mix correctly in Notepad. |
 | `<name> - enhanced audio.m4a` | The cleaned-up audio on its own. |
 
+## Model and accuracy
+
+Transcription is [`IFM/Jais-ASR`](https://huggingface.co/IFM/Jais-ASR) (5.72 B
+params, Apache-2.0, loaded in 4-bit). Published error rates on the [Open Universal
+Arabic ASR Leaderboard](https://github.com/Natural-Language-Processing-Elm/open_universal_arabic_asr_leaderboard)
+(lower is better; macro-average of six sets):
+
+| Test set | WER % | CER % |
+|---|---:|---:|
+| **Average** | **22.85** | **8.37** |
+| Common Voice 18 — MSA read speech | 8.56 | 2.70 |
+| MGB-2 — MSA broadcast news | 9.59 | 3.92 |
+| MASC clean — MSA lectures | 16.12 | 3.76 |
+| MASC noisy — MSA lectures, noisy | 25.44 | 7.51 |
+| SADA — Saudi dialect, broadcast | 30.85 | 14.33 |
+| Casablanca — 8 dialects, conversational | 46.56 | 18.02 |
+
+That average beats the other models on the same leaderboard (Audar 23.17,
+Speechmatics Melia 1 23.51, ElevenLabs Scribe v2 24.54, Cohere 25.87), though not
+every individual set. Conversational multi-dialect audio is the hard case — plan
+for roughly 5× the error of clean read speech, and note these are bf16 numbers
+while the skill runs 4-bit.
+
+**Coverage:** Modern Standard Arabic, 19 dialects (`DZ` Algerian, `BH` Bahraini,
+`EG` Egyptian, `AE` Emirati, `IQ` Iraqi, `JO` Jordanian, `KW` Kuwaiti, `LB`
+Lebanese, `LY` Libyan, `MR` Mauritanian, `MA` Moroccan, `OM` Omani, `PS`
+Palestinian, `QA` Qatari, `SA` Saudi, `SD` Sudanese, `SY` Syrian, `TN` Tunisian,
+`YE` Yemeni), plus code-switching into English, French, Spanish and Italian — the
+foreign spans stay in Latin script. `--language auto` lets the model detect the
+dialect; `--language EG` (the default) pins it.
+
+Full detail, protocol and citation: [references/model.md](references/model.md).
+
 ## Requirements
 
 - **Python 3.12** (`py -3.12` on Windows, `python3.12` elsewhere)
@@ -123,6 +156,7 @@ scripts/run_pipeline.py   decode → enhance → diarize → transcribe → HTML
 scripts/add_summary.py    inject the agent-written summary + checklist
 scripts/apply_ui.py       drafting-sheet theme, player, key-moments rail
 references/setup.md       environment + model setup, error table
+references/model.md       Jais-ASR error rates, dialect codes, code-switching
 references/ui-system.md   the visual system, tokens and layout rules
 assets/fonts/             Archivo, JetBrains Mono, Cairo (OFL, see OFL.txt)
 ```
