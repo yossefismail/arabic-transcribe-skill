@@ -9,6 +9,10 @@ key-moments rail on the timeline.
 Built for Egyptian-dialect Arabic with code-switched English (WhatsApp voice notes,
 voice memos, calls), but it handles MSA and other dialects too.
 
+```sh
+npx skills add yossefismail/arabic-transcribe-skill
+```
+
 ```
 audio ─► denoise + speech EQ ─► NVIDIA Sortformer diarization ─► Jais-ASR (4-bit)
       ─► agent writes summary ─► drafting-sheet HTML + plain-text transcript
@@ -77,15 +81,18 @@ One command, via the [skills CLI](https://github.com/vercel-labs/skills):
 npx skills add yossefismail/arabic-transcribe-skill
 ```
 
-It detects your agent (OpenCode, Claude Code, Cursor, …), copies the skill into
-`.agents/skills/arabic-transcribe` and records it in `skills-lock.json`. Useful
-flags:
+It detects your agents and installs the skill into the right place — project-level
+`.agents/skills/arabic-transcribe`, or with `-g` the agent's user directory
+(`~/.config/opencode/skills/arabic-transcribe` for OpenCode,
+`~/.claude/skills/arabic-transcribe` for Claude Code). Project installs are
+recorded in `skills-lock.json` with the source and a content hash.
 
 ```sh
-npx skills add yossefismail/arabic-transcribe-skill -g              # user-level instead of project
-npx skills add yossefismail/arabic-transcribe-skill -a claude-code  # pick the agent explicitly
-npx skills list                                                     # what's installed
-npx skills update                                                   # pull newer commits
+npx skills add yossefismail/arabic-transcribe-skill -g -a opencode     # user-level, OpenCode
+npx skills add yossefismail/arabic-transcribe-skill -g -a claude-code  # user-level, Claude Code
+npx skills list                                                        # what's installed
+npx skills update                                                      # pull newer commits
+npx skills remove arabic-transcribe                                    # uninstall
 ```
 
 This is a single-skill repo, so no `--skill` flag is needed.
